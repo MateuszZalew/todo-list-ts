@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "./components/Form";
 import ItemsList from "./components/ItemsList";
 import { nanoid } from "nanoid";
@@ -12,6 +12,14 @@ interface Item {
 const App = () => {
   const [items, setItems] = useState<Item[]>([]);
 
+  useEffect(() => {
+    let savedItems = localStorage.getItem("items");
+    if (typeof savedItems === "string") {
+      const initialData = JSON.parse(savedItems);
+      setItems(initialData);
+    }
+  }, []);
+
   const addItem = (newItemText: string): void => {
     const newItem = { id: nanoid(), text: newItemText, isCompleted: false };
     setItems([...items, newItem]);
@@ -21,6 +29,7 @@ const App = () => {
   const deleteItem = (id: string): void => {
     const newArray = items.filter((item) => item.id !== id);
     setItems(newArray);
+    localStorage.setItem("items", JSON.stringify(newArray));
   };
 
   return (
