@@ -13,10 +13,9 @@ const App = () => {
   const [items, setItems] = useState<Item[]>([]);
 
   const addItem = (newItemText: string): void => {
-    setItems([
-      ...items,
-      { id: nanoid(), text: newItemText, isCompleted: false },
-    ]);
+    const newItem = { id: nanoid(), text: newItemText, isCompleted: false };
+    setItems([...items, newItem]);
+    localStorage.setItem("items", JSON.stringify([...items, newItem]));
   };
 
   const deleteItem = (id: string): void => {
