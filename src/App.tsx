@@ -9,33 +9,54 @@ interface Item {
   isCompleted: boolean;
 }
 
+const setLocalStorage = (items) => {
+  localStorage.setItem("items", JSON.stringify(items));
+};
+
 const App = () => {
   const [items, setItems] = useState<Item[]>([]);
 
   useEffect(() => {
     let savedItems = localStorage.getItem("items");
     if (typeof savedItems === "string") {
-      const initialData = JSON.parse(savedItems);
+      const initialData: Item[] = JSON.parse(savedItems);
       setItems(initialData);
     }
   }, []);
 
   const addItem = (newItemText: string): void => {
     const newItem = { id: nanoid(), text: newItemText, isCompleted: false };
-    setItems([...items, newItem]);
-    localStorage.setItem("items", JSON.stringify([...items, newItem]));
+    const netItems = [...items, newItem];
+    setItems(netItems);
+    setLocalStorage(netItems);
+  };
+
+  const updateItem = (id: string): void => {
+    const newItems = items.map((item) => {
+      if (item.id === id) {
+        const newItem = { ...item, isCompleted: !item.isCompleted };
+        return newItem;
+      }
+      return item;
+    });
+    setItems(newItems);
+    setLocalStorage(newItems);
   };
 
   const deleteItem = (id: string): void => {
     const newArray = items.filter((item) => item.id !== id);
     setItems(newArray);
-    localStorage.setItem("items", JSON.stringify(newArray));
+    setLocalStorage(newArray);
   };
 
   return (
     <main className="section-center">
       <Form addItem={addItem} />
-      <ItemsList items={items} deleteItem={deleteItem} />
+      <ItemsList
+        items={items}
+        updateItem={updateItem}
+        deleteItem={deleteItem}
+      />
     </main>
   );
 };
