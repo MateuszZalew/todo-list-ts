@@ -4,9 +4,13 @@ import Form from "./components/Form";
 const App = () => {
   const [items, setItems] = useState();
 
+  const addItem = (item: string): void => {
+    console.log(item);
+  };
+
   return (
-    <main>
-      <Form />
+    <main className="section-center">
+      <Form addItem={addItem} />
     </main>
   );
 };
