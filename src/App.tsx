@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Form from "./components/Form";
 import ItemsList from "./components/ItemsList";
 import { nanoid } from "nanoid";
+import { ToastContainer, toast } from "react-toastify";
 
 interface Item {
   readonly id: string;
@@ -25,10 +26,33 @@ const App = () => {
   }, []);
 
   const addItem = (newItemText: string): void => {
+    if (!newItemText) {
+      toast.error("Please input a valid item", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     const newItem = { id: nanoid(), text: newItemText, isCompleted: false };
     const netItems = [...items, newItem];
     setItems(netItems);
     setLocalStorage(netItems);
+    toast.success("Item added!", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
 
   const updateItem = (id: string): void => {
@@ -47,10 +71,21 @@ const App = () => {
     const newArray = items.filter((item) => item.id !== id);
     setItems(newArray);
     setLocalStorage(newArray);
+    toast.success("Item deleted!", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
 
   return (
     <main className="section-center">
+      <ToastContainer />
       <Form addItem={addItem} />
       <ItemsList
         items={items}
